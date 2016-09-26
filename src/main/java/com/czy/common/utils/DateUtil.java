@@ -4,10 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 时间工具类 2017-05-25
@@ -29,6 +26,9 @@ public final class DateUtil {
      * @return 转换后的字符串
      */
     public static String dateToString(final Date date, final String patten) {
+        if (date == null || StringUtil.isNullOrEmptyWithSpace(patten)) {
+            throw new NullPointerException("date or patten may not be null");
+        }
         DateTimeFormatter formatter;
         if (dateTimeFormatterMap.containsKey(patten)) {
             formatter = dateTimeFormatterMap.get(patten);
@@ -40,7 +40,29 @@ public final class DateUtil {
     }
 
     /**
+     * 字符串转指定格式的时间
+     *
+     * @param date   需要转换的时间
+     * @param patten 格式
+     * @return 转换后的时间
+     */
+    public static LocalDateTime StringToLocalDateTime(final String date, final String patten) {
+        if (date == null || StringUtil.isNullOrEmptyWithSpace(patten)) {
+            throw new NullPointerException("date or patten may not be null");
+        }
+        DateTimeFormatter formatter;
+        if (dateTimeFormatterMap.containsKey(patten)) {
+            formatter = dateTimeFormatterMap.get(patten);
+        } else {
+            formatter = DateTimeFormatter.ofPattern(patten);
+            dateTimeFormatterMap.put(patten, formatter);
+        }
+        return LocalDateTime.parse(date, formatter);
+    }
+
+    /**
      * 获取Date的时区
+     *
      * @param date 需要获取时区的时间
      * @return 时区信息
      */
@@ -75,33 +97,12 @@ public final class DateUtil {
      * LocalDateTime转Date
      *
      * @param localDateTime 需要转换的时间
-     * @param zoneId        时区
-     * @return 转换后的Date
-     */
-    public static Date localDateTimeToDate(final LocalDateTime localDateTime, final ZoneId zoneId) {
-        return Date.from(localDateTime.atZone(zoneId).toInstant());
-    }
-
-    /**
-     * LocalDateTime转Date
-     *
-     * @param localDateTime 需要转换的时间
      * @return 转换后的Date
      */
     public static Date localDateTimeToDate(final LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    /**
-     * LocalDate转Date
-     *
-     * @param localDate 需要转换的时间
-     * @param zoneId    时区
-     * @return 转换后的Date
-     */
-    public static Date localDateToDate(final LocalDate localDate, final ZoneId zoneId) {
-        return Date.from(localDate.atStartOfDay(zoneId).toInstant());
-    }
 
     /**
      * LocalDate转Date
@@ -112,4 +113,16 @@ public final class DateUtil {
     public static Date localDateToDate(final LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
+
+    /**
+     * LocalDate转Date
+     *
+     * @param localDate 需要转换的时间
+     * @param zoneId    时区
+     * @return 转换后的Date
+     */
+//    public static Date localDateToDate(final LocalDate localDate, final ZoneId zoneId) {
+//        return Date.from(localDate.atStartOfDay(zoneId).toInstant());
+//    }
+
 }
