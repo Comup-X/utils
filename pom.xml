@@ -6,7 +6,7 @@
 
     <groupId>com.czy</groupId>
     <artifactId>common-utils</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <name>common-utils</name>
