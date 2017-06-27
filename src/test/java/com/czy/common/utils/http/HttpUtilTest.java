@@ -1,5 +1,6 @@
 package com.czy.common.utils.http;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,6 +20,7 @@ public class HttpUtilTest {
     }
 
     @Test
+    @Ignore
     public void doGet() throws Exception {
         System.out.println(HttpUtil.doGet("http://www.czy.com", null));
     }

@@ -1,7 +1,5 @@
 package com.czy.common.utils.http;
 
-import com.czy.common.utils.StringUtil;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -11,9 +9,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,22 +60,6 @@ public final class HttpUtil {
     }
 
     private static String getResponse(CloseableHttpResponse response) throws IOException {
-        HttpEntity entity = response.getEntity();
-        if (entity != null && entity.isStreaming()) {
-            InputStream content = entity.getContent();
-            byte[] bytes = new byte[content.available()];
-            content.read(bytes, 0, bytes.length);
-            String encode;
-            if (entity.getContentEncoding() == null) {
-                encode = "UTF-8";
-            } else {
-                encode = StringUtil.isNullOrEmptyWithSpace(entity.getContentEncoding().getName()) ? "UTF-8" : entity.getContentEncoding().getName();
-            }
-            entity.getContent().close();
-            response.close();
-            return new String(bytes, encode);
-        }
-        response.close();
-        throw new HttpResponseException(response.getStatusLine().getStatusCode(), "response entity error may null or not a stream");
+        return EntityUtils.toString(response.getEntity());
     }
 }
