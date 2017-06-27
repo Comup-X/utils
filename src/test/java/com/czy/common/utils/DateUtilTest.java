@@ -93,8 +93,7 @@ public class DateUtilTest {
     @Test
     public void dateToStringWithLocale() {
         Calendar instance = Calendar.getInstance();
-        //注意这里月份是从0开始
-        instance.set(2017, 3, 8);
+        instance.set(2017, Calendar.APRIL, 8);
         String string = DateUtil.dateToString(instance.getTime(), "ddMMMyy", Locale.ENGLISH);
         assert string.equals("08Apr17");
     }
