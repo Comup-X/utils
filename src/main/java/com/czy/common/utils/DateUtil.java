@@ -13,7 +13,9 @@ import java.util.*;
  */
 public final class DateUtil {
 
-    private static Map<String, DateTimeFormatter> dateTimeFormatterMap = new HashMap<>();
+    private static Map<String, DateTimeFormatter> dateTimeFormatterMap = Collections.synchronizedMap(new HashMap<>());
+
+    private static Map<String, DateTimeFormatter> dateTimeFormatterLocalMap = Collections.synchronizedMap(new HashMap<>());
 
     private DateUtil() {
     }
@@ -35,6 +37,20 @@ public final class DateUtil {
         } else {
             formatter = DateTimeFormatter.ofPattern(patten);
             dateTimeFormatterMap.put(patten, formatter);
+        }
+        return formatter.format(dateToLocalDateTime(date));
+    }
+
+    public static String dateToString(final Date date, final String patten, Locale locale) {
+        if (date == null || StringUtil.isNullOrEmptyWithSpace(patten)) {
+            throw new NullPointerException("date or patten may not be null");
+        }
+        DateTimeFormatter formatter;
+        if (dateTimeFormatterLocalMap.containsKey(patten)) {
+            formatter = dateTimeFormatterLocalMap.get(patten);
+        } else {
+            formatter = DateTimeFormatter.ofPattern(patten, locale);
+            dateTimeFormatterLocalMap.put(patten, formatter);
         }
         return formatter.format(dateToLocalDateTime(date));
     }
@@ -114,15 +130,12 @@ public final class DateUtil {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    /**
-     * LocalDate转Date
-     *
-     * @param localDate 需要转换的时间
-     * @param zoneId    时区
-     * @return 转换后的Date
-     */
-//    public static Date localDateToDate(final LocalDate localDate, final ZoneId zoneId) {
-//        return Date.from(localDate.atStartOfDay(zoneId).toInstant());
-//    }
-
+    public static Date lastDate(final Integer hour, final Integer minute) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime result = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), hour, minute, 0, 0);
+        if (result.isAfter(now)) {
+            result = result.minusDays(1);
+        }
+        return localDateTimeToDate(result);
+    }
 }

@@ -6,7 +6,7 @@
 
     <groupId>com.czy</groupId>
     <artifactId>common-utils</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.10</version>
     <packaging>jar</packaging>
 
     <name>common-utils</name>
@@ -34,6 +34,22 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.jdom</groupId>-->
+            <!--<artifactId>jdom</artifactId>-->
+            <!--<version>1.1</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

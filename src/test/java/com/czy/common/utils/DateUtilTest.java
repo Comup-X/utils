@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -87,5 +88,14 @@ public class DateUtilTest {
         assert instance.get(Calendar.YEAR) == 2017;
         assert instance.get(Calendar.MONTH) + 1 == 2;
         assert instance.get(Calendar.DAY_OF_MONTH) == 1;
+    }
+
+    @Test
+    public void dateToStringWithLocale() {
+        Calendar instance = Calendar.getInstance();
+        //注意这里月份是从0开始
+        instance.set(2017, 3, 8);
+        String string = DateUtil.dateToString(instance.getTime(), "ddMMMyy", Locale.ENGLISH);
+        assert string.equals("08Apr17");
     }
 }
