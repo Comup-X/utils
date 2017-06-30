@@ -12,6 +12,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +28,11 @@ public final class HttpUtil {
     private HttpUtil() {
     }
 
-    public static String doPost(String url, Map<String, String> params) throws IOException {
+    public static String doPost(String url, Map<String, String> params, String charset) throws IOException {
         HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> pairs = new ArrayList<>();
         params.forEach((key, value) -> pairs.add(new BasicNameValuePair(key, value)));
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs));
+        httpPost.setEntity(new UrlEncodedFormEntity(pairs, charset));
         CloseableHttpResponse response = HTTP_CLIENT.execute(httpPost);
         if (response == null) {
             throw new HttpResponseException(500, "httpclient execute but the response is null");
@@ -39,18 +40,19 @@ public final class HttpUtil {
         return getResponse(response);
     }
 
-    public static String doGet(String url, Map<String, String> params) throws IOException {
+    public static String doGet(String url, Map<String, String> params, String charset) throws IOException {
         if (url == null) {
             throw new IllegalArgumentException("url may not be null");
         }
         if (params != null && params.size() != 0) {
             StringBuilder stringBuilder = new StringBuilder(url);
             stringBuilder.append("?");
-            params.forEach((key, value) -> stringBuilder.append(key).append("=").append(value).append("&"));
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                stringBuilder.append(URLEncoder.encode(entry.getKey(), charset)).append("=").append(URLEncoder.encode(entry.getValue(), charset)).append("&");
+            }
             url = stringBuilder.toString();
-            url = url.substring(0, url.length() - 1);
+            url = url.substring(0, url.length()-1);
         }
-
         HttpGet httpGet = new HttpGet(url);
         CloseableHttpResponse response = HTTP_CLIENT.execute(httpGet);
         if (response == null) {

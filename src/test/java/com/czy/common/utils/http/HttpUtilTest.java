@@ -3,6 +3,8 @@ package com.czy.common.utils.http;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 /**
  * <一句话功能简介><br>
  *
@@ -22,7 +24,9 @@ public class HttpUtilTest {
     @Test
     @Ignore
     public void doGet() throws Exception {
-        System.out.println(HttpUtil.doGet("http://www.czy.com", null));
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("name","谢林志");
+        System.out.println(HttpUtil.doGet("http://www.czy.com", hashMap,"UTF-8"));
     }
 
 }
